@@ -14,16 +14,19 @@ export const register = async (req: Request, res: Response) => {
             });
             return;
         }
+
         const potentialUser = await userService.getUserByUsername(username);
-        console.log(potentialUser);
         if (potentialUser) {
             res.status(400).json({ message: "User already exists" });
             return;
         }
+
         const hashedPassword = await bcrypt.hash(password, 10);
         const user: User = { username, email, password: hashedPassword };
-        console.log("Creting user :", user);
+
+        console.log("Creating user :", user);
         await userService.createUser(user);
+
         res.status(201).json({ message: "User created" });
         return;
     } catch (error) {
@@ -58,9 +61,13 @@ export const login = async (req: Request, res: Response) => {
             return;
         }
 
-        const token = jwt.sign({ userId: user._id }, SERVER.secret, {
-            expiresIn: "1h",
-        });
+        const token = jwt.sign(
+            { name: user.username, id: user._id },
+            SERVER.secret,
+            {
+                expiresIn: "1h",
+            },
+        );
         res.status(200).json({ token });
     } catch (error) {
         console.error(error);

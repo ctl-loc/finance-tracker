@@ -6,7 +6,6 @@ import { ENVIRONMENT } from "./config";
 if (ENVIRONMENT !== "production") {
     dotenv.config({ path: path.resolve(process.cwd(), `.env.${ENVIRONMENT}`) });
 }
-console.log(process.env.DB_HOST);
 
 const pool = new Pool({
     user: process.env.DB_USER,
