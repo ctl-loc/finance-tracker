@@ -12,6 +12,8 @@ services:
         build:
             context: ./backend
             dockerfile: Dockerfile
+        env_file:
+            - ./backend/.env.production
         expose:
             - 5000
         networks:

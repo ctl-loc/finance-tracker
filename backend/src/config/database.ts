@@ -1,8 +1,12 @@
 import { Pool } from "pg";
 import dotenv from "dotenv";
+import path from "path";
 import { ENVIRONMENT } from "./config";
 
-dotenv.config({ path: `.env.${ENVIRONMENT}` });
+if (ENVIRONMENT !== "production") {
+    dotenv.config({ path: path.resolve(process.cwd(), `.env.${ENVIRONMENT}`) });
+}
+console.log(process.env.DB_HOST);
 
 const pool = new Pool({
     user: process.env.DB_USER,
