@@ -1,8 +1,7 @@
 import dotenv from "dotenv";
 
-dotenv.config();
-
-export const ENVIRONMENT = process.env.NODE_ENV === "development"; // 0 for prod, 1 for dev
+export const ENVIRONMENT = process.env.NODE_ENV; // development or production
+dotenv.config({ path: `.env.${ENVIRONMENT}` });
 
 export const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || "localhost";
 export const SERVER_PORT = process.env.SERVER_PORT

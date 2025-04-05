@@ -24,9 +24,9 @@ services:
         restart: always
         environment:
             # env file already in production environment
-            POSTGRES_USER: ${pg-user}
-            POSTGRES_PASSWORD: ${pg-password}
-            POSTGRES_DB: ${pg-db}
+            POSTGRES_USER: ${PG_USER}
+            POSTGRES_PASSWORD: ${PG_PASSWORD}
+            POSTGRES_DB: ${PG_DB}
         expose:
             - 5432
         networks:
