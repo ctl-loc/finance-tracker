@@ -1,0 +1,17 @@
+<form [formGroup]="loginForm" (ngSubmit)="submitForm()">
+  <div class="username">
+    <label for="username-input">Username:</label>
+    <input type="text" id="username-input" formControlName="username" />
+  </div>
+  <div class="password">
+    <label for="password-input">Password:</label>
+    <input type="password" id="password-input" formControlName="password" />
+  </div>
+  <button type="submit">Login</button>
+
+  <a routerLink="/register" (click)="goToRegister()">No account yet?</a>
+
+  <!-- message box -->
+  <div *ngIf="errorMessage" class="error-message-box">{{ errorMessage }}</div>
+  <div *ngIf="isProcessing" class="pending-message-box">Login pending...</div>
+</form>
