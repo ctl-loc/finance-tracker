@@ -1,0 +1,22 @@
+<form [formGroup]="registerForm" (ngSubmit)="submitForm()">
+  <div class="username">
+    <label for="username-input">Username:</label>
+    <input type="text" id="username-input" formControlName="username" />
+  </div>
+  <div class="email">
+    <label for="email-input">Email:</label>
+    <input type="text" id="email-input" formControlName="email" />
+  </div>
+  <div class="password">
+    <label for="password-input">Password:</label>
+    <input type="password" id="password-input" formControlName="password" />
+  </div>
+  <button type="submit">Sign up</button>
+
+  <a routerLink="/auth/login" (click)="goToLogin()">Already signed up ?</a>
+
+  <div *ngIf="errorMessage" class="error-message-box">{{ errorMessage }}</div>
+  <div *ngIf="isProcessing" class="pending-message-box">
+    Registration under validation...
+  </div>
+</form>

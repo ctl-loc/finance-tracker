@@ -1,0 +1,92 @@
+body {
+  background-color: #ffffff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+form {
+  background-color: #f8f8f8;
+  border: 1px solid #14532d;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 320px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #14532d;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #14532d;
+  outline: none;
+}
+
+button[type="submit"] {
+  background-color: #14532d;
+  color: #ffffff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+button[type="submit"]:hover {
+  background-color: #0e3e21;
+}
+
+a {
+  color: #1a5d1a; /* Your dark green */
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.error-message-box {
+  background-color: #fdecea;
+  border: 1px solid #f5c6cb;
+  color: #a94442;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.pending-message-box {
+  background-color: #e6f4ea;
+  border: 1px solid #c3e6cb;
+  color: #2e7d32;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
