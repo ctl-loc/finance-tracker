@@ -40,20 +40,23 @@ export class RegisterComponent {
     this.auth.register(credentials).subscribe({
       next: (response: HttpResponse<RegisterRes>) => {
         this.isProcessing = false;
+        if (response.status !== 201) return;
+
         // user created successfully
-        if (response.status === 201) {
-          this.isProcessing = false;
-          this.router.navigate(["/auth/login"]);
-        } else if (response.status === 409) {
-          this.errorMessage = "This user already exists";
-        } else {
-          // can't create a user ? fuck you
-          window.close();
-        }
+        console.info("[INFO] User created successfully");
+        this.isProcessing = false;
+        this.router.navigate(["/auth/login"]);
       },
       error: (err) => {
-        console.error("Error Status:", err.status);
-        console.error("Error Body:", err.error);
+        switch (err.status) {
+          case 409:
+            this.errorMessage = "This user already exists";
+            console.warn("[WARN] This user already exists");
+            break;
+          default:
+            this.errorMessage = "Unknown error";
+            console.error(`[ERROR] Unknown error: ${err}`);
+        }
       },
     });
   }

@@ -45,7 +45,10 @@ export class AuthService {
       .pipe(
         tap((response) => {
           if (response.status !== 200) return;
-          if (response.body) this.storeToken(response.body.token);
+          if (response.body) {
+            this.storeToken(response.body.token);
+            console.info("[INFO] Token stored");
+          }
           // refresh token is set on the cookies
         }),
       );
@@ -63,6 +66,7 @@ export class AuthService {
   }
 
   logout() {
+    console.warn("[WARN] Logging out");
     this.token$.next(null);
   }
 

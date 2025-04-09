@@ -44,6 +44,7 @@ export class LoginComponent {
 
         if (response.status !== 200 || !response.body) return;
         // server response is 200, logged in
+        console.info("[INFO] User logged in successfully");
         this.router.navigate(["dashboard"]);
       },
       error: (err) => {
@@ -59,7 +60,7 @@ export class LoginComponent {
             this.errorMessage = "Invalid credentials...";
             break;
           default:
-            console.error(err);
+            console.error(`[ERROR] : ${err}`);
         }
       },
     });

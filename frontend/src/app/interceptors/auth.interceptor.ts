@@ -54,6 +54,7 @@ function handle401Error(
   // Check if we're already refreshing
   if (!authService.isRefreshing) {
     authService.isRefreshing = true;
+    console.info("[INFO] Refreshing token...");
 
     return authService.refreshToken().pipe(
       switchMap(() => {
@@ -75,6 +76,7 @@ function handle401Error(
   // Wait while refreshing
   return authService.refreshCompleted$.pipe(
     switchMap(() => {
+      console.info("[INFO] Token refreshed");
       const newAuthReq = addTokenToRequest(originalReq, authService.token);
       return next(newAuthReq);
     }),
