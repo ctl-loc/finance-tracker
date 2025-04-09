@@ -12,7 +12,7 @@ import errorMiddleware from "./middlewares/error.middleware";
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({ origin: "localhost:4200" }));
 app.use(helmet());
 app.use(express.json());
 
