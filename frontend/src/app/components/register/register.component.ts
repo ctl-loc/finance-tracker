@@ -48,6 +48,7 @@ export class RegisterComponent {
         this.router.navigate(["/auth/login"]);
       },
       error: (err) => {
+        this.isProcessing = false;
         switch (err.status) {
           case 409:
             this.errorMessage = "This user already exists";
