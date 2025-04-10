@@ -1,10 +1,9 @@
 import { Routes } from "@angular/router";
-// import { LoginComponent } from "./components/login/login.component";
 // import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
-// import { HomeComponent } from "./containers/home/home.component";
 import { authGuard } from "./guards/auth.guard";
 import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
+import { DashboardComponent } from "./containers/dashboard/dashboard.component";
 
 export const routes: Routes = [
   {
@@ -25,12 +24,12 @@ export const routes: Routes = [
     title: "Register",
     component: RegisterComponent,
   },
-  // {
-  //   path: "dashboard",
-  //   title: "Dashboard",
-  //   component: HomeComponent,
-  //   canActivate: [authGuard],
-  // },
+  {
+    path: "dashboard",
+    title: "Dashboard",
+    component: DashboardComponent,
+    canActivate: [authGuard],
+  },
   // {
   //   path: "**",
   //   title: "404 - Not Found",
