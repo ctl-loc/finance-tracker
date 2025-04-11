@@ -1,0 +1,21 @@
+mat-toolbar {
+  background-color: #ecf0f1;
+}
+
+.text-box {
+  flex-direction: column;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.main-text {
+  font-weight: bold;
+  color: black;
+  font-size: 150%;
+}
+.sub-text {
+  font-size: 110%;
+  color: gray;
+}
