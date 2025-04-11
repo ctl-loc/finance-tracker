@@ -15,9 +15,16 @@ export const apiUrlInterceptor: HttpInterceptorFn = (
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const router = inject(Router);
-
+  const skipPath = ["/static"];
   // Clone request and add auth header
   const apiUrl = environment.apiUrl;
+
+  for (const path of skipPath) {
+    if (req.url.startsWith(path)) {
+      return next(req);
+    }
+  }
+
   const passedReq = req.clone({
     url: apiUrl + req.url,
   });
