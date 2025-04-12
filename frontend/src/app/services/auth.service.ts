@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { CookieService } from "ngx-cookie-service";
+
 import {
   BehaviorSubject,
   catchError,
   first,
   Observable,
-  of,
   Subject,
   tap,
 } from "rxjs";
@@ -30,6 +31,21 @@ export class AuthService {
     return this.token$.value;
   }
 
+  public isAuthenticated() {
+    return !!this.token;
+  }
+
+  public hasRefreshToken() {
+    const cookieService = inject(CookieService);
+    return cookieService.check("refreshToken");
+  }
+
+  public clearTokens() {
+    const cookieService = inject(CookieService);
+    cookieService.delete("refreshToken");
+    this.token$.next(null);
+  }
+
   register(credentials?: RegisterReq): Observable<HttpResponse<RegisterRes>> {
     const endpoint = "/auth/register";
     return this.http.post<RegisterRes>(endpoint, credentials, {
@@ -41,7 +57,10 @@ export class AuthService {
     const endpoint = "/auth/login";
 
     return this.http
-      .post<AuthRes>(endpoint, credentials, { observe: "response" })
+      .post<AuthRes>(endpoint, credentials, {
+        observe: "response",
+        withCredentials: true, // allow refreshToken cookie
+      })
       .pipe(
         tap((response) => {
           if (response.status !== 200) return;
@@ -56,13 +75,16 @@ export class AuthService {
 
   refreshToken(): Observable<AuthRes> {
     const endpoint = "/auth/refresh";
-    return this.http.post<AuthRes>(endpoint, {}).pipe(
-      tap((response) => {
-        this.storeToken(response.token);
-        // tell user function to set isRefreshing to false
-        this.refreshCompleted$.next();
-      }),
-    );
+    return this.http
+      .post<AuthRes>(endpoint, {}, { withCredentials: true })
+      .pipe(
+        tap((response) => {
+          this.storeToken(response.token);
+          console.info("[INFO] token refreshed");
+          // tell user function to set isRefreshing to false
+          this.refreshCompleted$.next();
+        }),
+      );
   }
 
   logout() {
