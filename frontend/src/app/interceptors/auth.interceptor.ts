@@ -15,7 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  const unprotectedRoutes = ["/auth"];
+  const unprotectedRoutes = ["/", "/auth"];
 
   // Clone request and add auth header
   const authReq = addTokenToRequest(req, authService.token);
@@ -67,7 +67,7 @@ function handle401Error(
         authService.isRefreshing = false;
         // If refresh fails, logout and redirect
         authService.logout();
-        router.navigate(["/login"]);
+        router.navigate(["/auth/login"]);
         return throwError(() => error);
       }),
     );
