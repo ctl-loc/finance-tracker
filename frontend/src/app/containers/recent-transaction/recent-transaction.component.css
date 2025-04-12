@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.cards-container {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  align-items: stretch;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.square-card {
+  flex: 1;
+  aspect-ratio: 1/1;
+  box-sizing: border-box;
+  display: flex;
+  max-height: 100%; /* Ensure cards don't overflow container */
+  margin: 50px;
+}
