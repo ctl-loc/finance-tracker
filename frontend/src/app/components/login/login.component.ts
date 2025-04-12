@@ -29,6 +29,18 @@ export class LoginComponent {
     });
   }
 
+  public ngOnInit(): void {
+    // if refreshToken cookie, use it
+    this.auth.refreshToken().subscribe({
+      next: (token) => {
+        this.router.navigate(["dashboard"]);
+      },
+      error: (error) => {
+        console.error("[ERROR] Failed to refresh token");
+      },
+    });
+  }
+
   public submitForm() {
     if (this.isProcessing) return; // can't spam the button
 
@@ -58,6 +70,9 @@ export class LoginComponent {
             break;
           case 401:
             this.errorMessage = "Invalid credentials...";
+            break;
+          case 500:
+            this.errorMessage = "Internal server error";
             break;
           default:
             console.error(`[ERROR] : ${err}`);
