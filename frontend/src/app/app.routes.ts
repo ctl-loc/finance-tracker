@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-// import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { authGuard } from "./guards/auth.guard";
 import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
@@ -30,9 +29,4 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
   },
-  // {
-  //   path: "**",
-  //   title: "404 - Not Found",
-  //   component: PageNotFoundComponent,
-  // },
 ];
