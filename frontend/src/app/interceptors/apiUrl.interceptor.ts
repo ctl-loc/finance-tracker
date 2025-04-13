@@ -8,7 +8,7 @@ import { inject } from "@angular/core";
 import { Observable, catchError, switchMap, throwError } from "rxjs";
 import { AuthService } from "../services/auth.service";
 import { Router } from "@angular/router";
-import { environment } from "../../environment/environment";
+import { environment } from "../../environments/environment";
 
 export const apiUrlInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
