@@ -1,0 +1,34 @@
+services:
+    database:
+        image: postgres:17-alpine
+        environment:
+            POSTGRES_USER: $POSTGRES_USER
+            POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+            POSTGRES_DB: $POSTGRES_DB
+        expose:
+            - "5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - finance
+
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        env_file:
+            # file already in production environment
+            - .env
+        depends_on:
+            - database
+        networks:
+            - finance
+
+networks:
+    finance:
+        driver: bridge
+
+volumes:
+    postgres_data:
