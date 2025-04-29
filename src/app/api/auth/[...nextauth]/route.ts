@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { login } from "@/lib/auth";
 import NextAuth, { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -15,7 +16,7 @@ const provider = CredentialsProvider({
         if (!credentials.email || !credentials.password) return null;
 
         const { user } = await login(credentials?.email, credentials.password);
-        return user ?? null;
+        return (user as unknown as User) ?? null;
     },
 });
 
