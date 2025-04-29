@@ -17,7 +17,7 @@ services:
             context: .
             dockerfile: Dockerfile
         ports:
-            - "3000:3000"
+            - "8085:3000"
         env_file:
             # file already in production environment
             - .env
