@@ -36,14 +36,16 @@ model Session {
 }
 
 model Transaction {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
-  amount      Float
-  description String
-  bankAccount        BankAccount     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  tags        String[]
+  id             String       @id @default(cuid())
+  userId         String       @map("user_id")
+  bankAccountId  String       @map("bank_account_id")
+  amount         Float
+  description    String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  tags           String[]
+
+  bankAccount    BankAccount  @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
 
   @@map("transaction")
 }
