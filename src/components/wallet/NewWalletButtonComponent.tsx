@@ -10,24 +10,28 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
-import api from "@/lib/api";
-import { useSession } from "next-auth/react";
+import useWallet from "@/hooks/wallet";
 
 export default function NewWalletButtonComponent() {
-  const { data: session } = useSession();
+  const { addWallet } = useWallet();
 
   const walletName = useRef<HTMLInputElement>(null);
   const baseAccountValue = useRef<HTMLInputElement>(null);
 
   const onSubmitForm = async () => {
-    // add wallet to the database
-    await api.post("/wallets", {
-      wallet: {
-        name: walletName.current?.value,
-        baseAccountValue: baseAccountValue.current?.value,
-        userId: session?.user.id,
-      },
-    });
+    if (!walletName.current?.value) {
+      console.warn("[WARN] no wallet name");
+      return;
+    }
+
+    // if value, cast as a number
+    // else use undefined
+    await addWallet(
+      walletName.current?.value,
+      baseAccountValue.current?.value
+        ? +baseAccountValue.current?.value
+        : undefined
+    );
   };
 
   return (
