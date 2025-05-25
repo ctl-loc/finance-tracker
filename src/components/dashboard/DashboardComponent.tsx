@@ -6,10 +6,10 @@ import RecentTransactions from "./RecentTransactions";
 
 export default function DashboardComponent() {
   return (
-    <div className="flex h-full w-full flex-col">
-      <div>
+    <div className="flex flex-col justify-start h-full w-full">
+      <div className="flex flex-col h-full w-full flex-1">
         {/* top bar */}
-        <div className="flex flex-row w-full bg-amber-400 p-2 gap-2 h-1/3">
+        <div className="flex flex-row w-full p-2 gap-2 flex-1">
           <div className="flex-1">
             <DashboardCardComponent
               title={"Total Balance"}
@@ -44,7 +44,7 @@ export default function DashboardComponent() {
           </div>
         </div>
         {/* middle bar */}
-        <div className="flex flex-row w-full gap-2 p-2 h-1/3">
+        <div className="flex flex-row w-full gap-2 p-2 flex-1">
           <div className="w-6/10">
             <MoneyFlowComponent />
           </div>
@@ -53,7 +53,7 @@ export default function DashboardComponent() {
           </div>
         </div>
         {/* bottom bar */}
-        <div className="w-full flex flex-row gap-2 p-2 h-1/3">
+        <div className="w-full flex flex-row gap-2 p-2 flex-1">
           <div className="flex w-6/10">
             <RecentTransactions />
           </div>
