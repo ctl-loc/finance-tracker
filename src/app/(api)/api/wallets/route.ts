@@ -48,13 +48,7 @@ export async function POST(req: NextRequest) {
       balance: +wallet.baseAccountValue,
     };
 
-    console.log(
-      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaawalletTyped:",
-      walletTyped.balance,
-      typeof walletTyped.balance
-    );
-
-    await addWallet(walletTyped);
+    await addWallet(walletTyped as BankAccount);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {

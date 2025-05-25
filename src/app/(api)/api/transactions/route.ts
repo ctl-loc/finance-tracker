@@ -1,20 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addTransaction, getRecentTransactions } from "@/lib/transactions";
 
-const defaultAmount = 5;
-
 export async function GET(req: NextRequest) {
   console.log(req.url);
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("user_id");
-  const amount = Number(searchParams.get("amount") || defaultAmount);
 
   if (!userId) {
     return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
   }
 
   try {
-    const transactions = await getRecentTransactions(userId, amount);
+    const transactions = await getRecentTransactions(userId);
 
     return NextResponse.json(transactions);
   } catch (error) {
