@@ -1,45 +1,21 @@
 "use client";
 import { Transaction } from "@/generated/prisma";
-import api from "@/lib/api";
-import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
 import CardComplexeComponent from "./CardComplexeComponent";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "../ui/table";
+import useTransactions from "@/hooks/transactions";
 
 export default function RecentTransactions() {
-  const { data: session } = useSession();
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, getTransactions } = useTransactions();
 
-  // fetch 5 most recent transactions
-  const fetchTransactions = async () => {
-    if (!session?.user?.id) return;
-
-    try {
-      const res = await api.get("/transactions", {
-        params: { user_id: session.user.id, amount: 5 },
-      });
-
-      setTransactions(res.data);
-    } catch (error) {
-      console.error("Error fetching transactions", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // load transactions into the state
-  useEffect(() => {
-    fetchTransactions();
-  }, [session]);
+  const transactions = getTransactions(5, undefined);
+  console.log(transactions);
 
   if (loading) return <div>Loading...</div>;
 
