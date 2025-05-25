@@ -1,7 +1,7 @@
+import { BankAccount } from "@/generated/prisma";
 import prisma from "./prisma";
 
-export const addWallet = async (wallet) => {
-  console.log("++++++++++++++++++++++", wallet.balance);
+export const addWallet = async (wallet: BankAccount) => {
   await prisma.bankAccount.create({
     // data: { ...wallet },
     data: {
