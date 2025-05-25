@@ -1,14 +1,10 @@
-import { TransactionClient } from "@/types/transaction";
 import prisma from "./prisma";
+import { TransactionClient } from "@/types/transaction";
 
-export const getRecentTransactions = async (
-  userId: string,
-  amount?: number
-) => {
+export const getRecentTransactions = async (userId: string) => {
   const trans = await prisma.transaction.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
-    take: amount,
   });
 
   return trans;
