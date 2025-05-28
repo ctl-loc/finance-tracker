@@ -5,23 +5,23 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-    provider = "prisma-client-js"
-    output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String       @id @default(cuid())
-  email     String?      @unique
-  password  String?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  sessions  Session[]
-  
+  id          String        @id @default(cuid())
+  email       String?       @unique
+  password    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  sessions    Session[]
+  tags        Tag[]
   BankAccount BankAccount[]
 }
 
@@ -35,31 +35,41 @@ model Session {
   @@map("session")
 }
 
-model Transaction {
-  id             String       @id @default(cuid())
-  userId         String       @map("user_id")
-  bankAccountId  String       @map("bank_account_id")
-  amount         Float
-  description    String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  tags           String[]
-
-  bankAccount    BankAccount  @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
-
-  @@map("transaction")
-}
-
 model BankAccount {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
-  name String
-  balance     Float
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String        @id @default(cuid())
+  userId       String        @map("user_id")
+  name         String
+  balance      Float
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   transactions Transaction[]
 
   @@map("bank_account")
 }
-// EHO regarde ici ce que j'ai fait c'est quoi ca faut fix ????? 
+
+model Transaction {
+  id            String      @id @default(cuid())
+  userId        String      @map("user_id")
+  bankAccountId String      @map("bank_account_id")
+  amount        Float
+  description   String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])  // Explicit relation
+  tags          Tag[]       
+
+  @@map("transaction")
+}
+
+model Tag {
+  id           String       @id @default(cuid())
+  name         String
+  userId       String       @map("user_id")
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  transactions Transaction[] 
+
+  @@map("tag")
+}
