@@ -1,4 +1,4 @@
-import { Transaction } from "@/generated/prisma";
+import { Tag, Transaction } from "@/generated/prisma";
 import api from "@/lib/api";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
@@ -29,28 +29,52 @@ const useTransactions = () => {
   const getTransactions = useCallback(
     (amount: number | undefined, account: string | undefined) => {
       let selectedTransactions = transactions;
-      console.log("no filter:", selectedTransactions);
+
       // filter by account if present
       if (account) {
         selectedTransactions = selectedTransactions.filter(
           (transaction: Transaction) => transaction.bankAccountId === account
         );
       }
-      console.log("account filter:", selectedTransactions);
-
+      // return specific amount if registered
       if (amount) {
         selectedTransactions = selectedTransactions.slice(0, amount);
       }
-      console.log("amount filter:", selectedTransactions);
 
       return selectedTransactions;
     },
     [transactions]
   );
 
-  const addTransaction = useCallback(async (transaction: Transaction) => {
-    await api.post("/transactions", { transaction });
-  }, []);
+  const addTransaction = useCallback(
+    async ({
+      accountId,
+      value,
+      description,
+      tags,
+    }: {
+      accountId: string;
+      value: number;
+      description?: string;
+      tags?: Tag[];
+    }) => {
+      try {
+        await api.post("/transactions", {
+          transaction: {
+            userId: session?.user.id,
+            accountId: accountId,
+            amount: value,
+            description: description,
+            tags: tags,
+          },
+        });
+        fetchTransactions();
+      } catch (error) {
+        console.error("[ERROR] adding transaction : ", error);
+      }
+    },
+    [fetchTransactions, session?.user.id]
+  );
 
   // Automatically fetch once session is ready
   useEffect(() => {

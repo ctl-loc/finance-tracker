@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addTransaction, getRecentTransactions } from "@/lib/transactions";
+import { Tag } from "@/generated/prisma";
 
 export async function GET(req: NextRequest) {
-  console.log(req.url);
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("user_id");
 
@@ -24,20 +24,26 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { transaction } = await req.json();
-  console.log("Transaction:", transaction);
+  const { transaction } = (await req.json()) as {
+    transaction: {
+      userId: string;
+      accountId: string;
+      amount: number;
+      description?: string | null;
+      tags: Array<Tag>;
+    };
+  };
+
   // Validate transaction object
   if (
     !transaction ||
     typeof transaction !== "object" ||
     !transaction.userId ||
     typeof transaction.userId !== "string" ||
+    !transaction.accountId ||
+    typeof transaction.accountId !== "string" ||
     !transaction.amount ||
-    typeof transaction.amount !== "number" ||
-    !transaction.description ||
-    typeof transaction.description !== "string" ||
-    !transaction.tags ||
-    !Array.isArray(transaction.tags)
+    typeof transaction.amount !== "number"
   ) {
     return NextResponse.json(
       { error: "Missing or invalid transaction" },
@@ -46,7 +52,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await addTransaction(transaction);
+    await addTransaction({
+      userId: transaction.userId,
+      bankAccountId: transaction.accountId,
+      amount: transaction.amount,
+      description: transaction.description,
+      tags: transaction.tags,
+    });
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
