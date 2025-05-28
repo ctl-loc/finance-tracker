@@ -1,5 +1,3 @@
-Use `npx prisma migrate dev` to create a new migration. (update the registered dataa=base)
-
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
