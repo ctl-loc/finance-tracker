@@ -3,7 +3,6 @@ import prisma from "./prisma";
 
 export const addWallet = async (wallet: BankAccount) => {
   await prisma.bankAccount.create({
-    // data: { ...wallet },
     data: {
       userId: wallet.userId,
       name: wallet.name,

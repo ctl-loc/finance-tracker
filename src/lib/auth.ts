@@ -41,7 +41,7 @@ export async function register(
       },
     });
 
-    console.log("[INFO] Registration successful");
+    console.info("[INFO] Registration successful");
   } catch (error) {
     console.error(error);
   }

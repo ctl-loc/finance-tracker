@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const { wallet } = await req.json();
-  console.log("wallet:", wallet);
+
   // Validate wallet object
   if (
     !wallet ||

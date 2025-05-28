@@ -11,13 +11,13 @@ const buttonsValue = [
     },
   },
   {
-    name: "Transaction",
+    name: "Transactions",
     action: (router: AppRouterInstance) => {
       router.push("/transactions");
     },
   },
   {
-    name: "Wallet",
+    name: "Wallets",
     action: (router: AppRouterInstance) => {
       router.push("/wallets");
     },

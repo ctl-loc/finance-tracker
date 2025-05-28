@@ -11,7 +11,6 @@ const provider = CredentialsProvider({
   },
   // function call on signIn
   async authorize(credentials, req) {
-    console.log("authorizing", credentials);
     if (!credentials) return null;
     if (!credentials.email || !credentials.password) return null;
 
