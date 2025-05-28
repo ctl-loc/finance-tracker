@@ -1,10 +1,11 @@
+import { BankAccount } from "@/generated/prisma";
 import api from "@/lib/api";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
 const useWallet = () => {
   const { data: session, status } = useSession();
-  const [wallets, setWallets] = useState([]);
+  const [wallets, setWallets] = useState([] as BankAccount[]);
   const [loading, setLoading] = useState(true);
 
   const fetchWallets = useCallback(async () => {
@@ -16,7 +17,7 @@ const useWallet = () => {
         params: { userId: session?.user.id },
       });
       setWallets(wallets.data);
-      console.log("[INFO] wallets fetched");
+      console.info("[INFO] wallets fetched");
     } catch (error) {
       console.error("[ERROR] fetching wallets:", error);
     } finally {
@@ -27,7 +28,7 @@ const useWallet = () => {
   const addWallet = useCallback(
     async (name: string, baseValue: number | undefined) => {
       try {
-        await api.post("/wallets", {
+        const newWallet = await api.post("/wallets", {
           wallet: {
             name: name,
             baseAccountValue: baseValue ?? 0,
@@ -35,9 +36,11 @@ const useWallet = () => {
           },
         });
         fetchWallets();
-        console.log("[INFO] wallets added");
+        console.info("[INFO] wallets added");
+        return newWallet;
       } catch (error) {
         console.error("[ERROR] adding new wallet : ", error);
+        return undefined;
       }
     },
     [fetchWallets, session]
