@@ -44,8 +44,23 @@ model BankAccount {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
+  histories BankAccountHistory[]
 
   @@map("bank_account")
+}
+
+model BankAccountHistory {
+  id             String   @id @default(cuid())
+  bankAccountId  String   @map("bank_account_id")
+  userId         String   @map("user_id")
+  name           String
+  balance        Float
+  validFrom      DateTime
+  validTo        DateTime
+  bankAccount    BankAccount @relation(fields: [bankAccountId], references: [id])
+
+  @@index([bankAccountId, validFrom])
+  @@map("bank_account_history")
 }
 
 model Transaction {
