@@ -32,10 +32,14 @@ export default function DashboardCardComponent({
         </div>
       </CardContent>
       <CardFooter>
-        <div>
-          {growth > 0 ? <span>+</span> : <></>}
-          {growth}% over {periodGrowth}
-        </div>
+        {Number.isNaN(growth) ? (
+          <div>No data on growth for this time window</div>
+        ) : (
+          <div>
+            {growth > 0 ? <span>+</span> : <></>}
+            {growth}% over {periodGrowth}
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

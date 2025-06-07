@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import useTransactions from "@/hooks/transactions";
 import { useRef, useState } from "react";
 import { Button } from "../ui/button";
 import WalletSelector from "./WalletSelector";
 import { Input } from "../ui/input";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -18,6 +18,7 @@ import {
 import { Label } from "../ui/label";
 import TagsSelector from "./TagsSelector";
 import { Tag } from "@/generated/prisma";
+import useTransactions from "@/hooks/transactions";
 
 export default function NewTransactionButtonComponent() {
   const { addTransaction } = useTransactions();
@@ -44,6 +45,7 @@ export default function NewTransactionButtonComponent() {
       tags: tagsState[0],
       description: description.current?.value,
     });
+    window.location.reload();
   };
 
   return (
@@ -107,9 +109,14 @@ export default function NewTransactionButtonComponent() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={onSubmitForm}>
-              Save transaction
-            </Button>
+            <DialogClose asChild>
+              <Button variant={"destructive"}>Cancel</Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button type="submit" onClick={onSubmitForm}>
+                Save transaction
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

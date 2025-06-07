@@ -5,13 +5,32 @@ import { Tag } from "@/generated/prisma";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("user_id");
+  const walletId = searchParams.get("walletId");
+  const timeParam = searchParams.get("timeLimit");
 
   if (!userId) {
     return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
   }
 
+  // parse timeLimit parameter
+  let timeLimit: Date | undefined = undefined;
+  if (timeParam) {
+    const parsedDate = new Date(timeParam);
+    if (isNaN(parsedDate.getTime())) {
+      return NextResponse.json(
+        { error: "Invalid timeLimit format" },
+        { status: 400 }
+      );
+    }
+    timeLimit = parsedDate;
+  }
+
   try {
-    const transactions = await getRecentTransactions(userId);
+    const transactions = await getRecentTransactions(
+      userId,
+      walletId ?? undefined,
+      timeLimit ?? undefined
+    );
 
     return NextResponse.json(transactions);
   } catch (error) {

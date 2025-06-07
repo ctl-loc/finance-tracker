@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 const useTransactions = () => {
   const { data: session, status } = useSession();
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState([] as Transaction[]);
   const [loading, setLoading] = useState(true);
 
   // fetch transaction from the api

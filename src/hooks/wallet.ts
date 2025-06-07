@@ -10,6 +10,7 @@ const useWallet = () => {
 
   const fetchWallets = useCallback(async () => {
     if (!session || !session.user) return;
+
     setLoading(true);
 
     try {
@@ -46,6 +47,32 @@ const useWallet = () => {
     [fetchWallets, session]
   );
 
+  const getWallets = useCallback(
+    async (id: string | undefined, timelimit?: Date) => {
+      if (!session || !session.user) return;
+      setLoading(true);
+
+      try {
+        const wallets = await api.get("/wallets", {
+          params: {
+            userId: session?.user.id,
+            walletId: id,
+            timeLimit: timelimit?.toISOString(),
+          }, // search for specific wallet or specific time
+        });
+
+        console.info("[INFO] wallets fetched");
+        return wallets.data;
+      } catch (error) {
+        console.error("[ERROR] fetching wallets:", error);
+        return undefined;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [session]
+  );
+
   // Automatically fetch once session is ready
   useEffect(() => {
     if (status === "authenticated") {
@@ -53,7 +80,7 @@ const useWallet = () => {
     }
   }, [status, fetchWallets]);
 
-  return { wallets, loading, fetchWallets, addWallet };
+  return { wallets, loading, fetchWallets, addWallet, getWallets };
 };
 
 export default useWallet;

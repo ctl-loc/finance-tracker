@@ -1,9 +1,17 @@
 import { Tag } from "@/generated/prisma";
 import prisma from "./prisma";
 
-export const getRecentTransactions = async (userId: string) => {
+export const getRecentTransactions = async (
+  userId: string,
+  walletId: string | undefined,
+  timeLimit?: Date // Use Date for time limit
+) => {
+  const where: any = { userId };
+  if (walletId) where.id = walletId;
+  if (timeLimit) where.createdAt = { gte: timeLimit };
+
   const trans = await prisma.transaction.findMany({
-    where: { userId },
+    where,
     orderBy: { createdAt: "desc" },
     include: { tags: true },
   });
@@ -18,7 +26,7 @@ export const addTransaction = async (transaction: {
   description?: string | null;
   tags: Array<Tag>;
 }) => {
-  return await prisma.transaction.create({
+  const addedTrans = await prisma.transaction.create({
     data: {
       userId: transaction.userId,
       bankAccountId: transaction.bankAccountId,
@@ -31,4 +39,12 @@ export const addTransaction = async (transaction: {
       },
     },
   });
+
+  // update the bank account balance
+  await prisma.bankAccount.update({
+    where: { id: transaction.bankAccountId },
+    data: { balance: { increment: transaction.amount } },
+  });
+
+  return addedTrans;
 };

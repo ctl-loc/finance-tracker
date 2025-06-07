@@ -9,11 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import useTransactions from "@/hooks/transactions";
 import { TransactionWithTags } from "@/types/types";
+import useTransactions from "@/hooks/transactions";
 
 export function TransactionsTable({ amount }: { amount: number | undefined }) {
   const { transactions } = useTransactions();
+  console.log("trans", transactions);
 
   return (
     <Table>
@@ -27,7 +28,7 @@ export function TransactionsTable({ amount }: { amount: number | undefined }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {transactions
+        {/* {transactions
           .slice(0, amount) // if amount is undefined, take the whole array
           .map((transaction: TransactionWithTags) => (
             <TableRow key={transaction.id}>
@@ -47,7 +48,7 @@ export function TransactionsTable({ amount }: { amount: number | undefined }) {
                 {transaction.tags.map((tag: Tag) => tag.name).join(", ")}
               </TableCell>
             </TableRow>
-          ))}
+          ))} */}
       </TableBody>
     </Table>
   );

@@ -39,6 +39,7 @@ export default function TagsSelector({
     }
   };
   const createTag = async (name: string) => {
+    if (name === "") return;
     const newTag: Tag = await addGlobalTag(name);
     addTag(newTag);
   };
