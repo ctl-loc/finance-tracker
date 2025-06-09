@@ -1,8 +1,9 @@
 "use server";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BankAccount } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
+import { addTransaction } from "./transactions";
+import { ActionReturn } from "@/types/types";
 
 /**
  * Adds a new wallet (bank account) to the database for a specified user.
@@ -12,17 +13,25 @@ import prisma from "@/lib/prisma";
  *   - If successful, returns `{ success: true, data: newWallet }` where `newWallet` is the created bank account.
  *   - If an error occurs, returns `{ success: false }`.
  */
-export async function addWallet(wallet: BankAccount): Promise<{
-  success: boolean;
-  data?: BankAccount;
-}> {
+export async function addWallet(
+  wallet: BankAccount
+): ActionReturn<BankAccount> {
   try {
+    // initiate wallet at 0
     const newWallet = await prisma.bankAccount.create({
       data: {
         userId: wallet.userId,
         name: wallet.name,
-        balance: wallet.balance,
+        balance: 0,
       },
+    });
+
+    await addTransaction({
+      userId: wallet.userId,
+      bankAccountId: newWallet.id,
+      amount: wallet.balance,
+      description: "Init balance transaction",
+      tags: [],
     });
 
     console.info(`[INFO] Wallet added for ${wallet.userId} : ${newWallet.id}`);
@@ -44,9 +53,7 @@ export async function addWallet(wallet: BankAccount): Promise<{
  *
  * @remark use getHistoryWallet for non-live information
  */
-export async function getWallets(
-  userId: string
-): Promise<{ success: boolean; data?: any }> {
+export async function getWallets(userId: string): ActionReturn<BankAccount[]> {
   try {
     const wallets = await prisma.bankAccount.findMany({
       where: { userId: userId },
@@ -74,7 +81,14 @@ export async function getHistoryWallet(
   userId: string,
   walletId: string,
   timestamp: Date
-): Promise<{ success: boolean; data?: any }> {
+): ActionReturn<{
+  id: string;
+  userId: string;
+  name: string;
+  balance: number;
+  validFrom: Date;
+  validTo: Date;
+} | null> {
   try {
     const history = await prisma.bankAccountHistory.findFirst({
       where: {
