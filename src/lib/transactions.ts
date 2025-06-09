@@ -6,6 +6,7 @@ export const getRecentTransactions = async (
   walletId: string | undefined,
   timeLimit?: Date // Use Date for time limit
 ) => {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const where: any = { userId };
   if (walletId) where.id = walletId;
   if (timeLimit) where.createdAt = { gte: timeLimit };
