@@ -30,7 +30,7 @@ export default function NewWalletButtonComponent() {
     // else use undefined
     const wallet = {
       userId: session?.user.id,
-      id: walletName.current?.value,
+      name: walletName.current?.value,
       balance: baseAccountValue.current?.value
         ? +baseAccountValue.current?.value
         : undefined,

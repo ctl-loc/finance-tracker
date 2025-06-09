@@ -1,6 +1,6 @@
 "use client";
 import { Tag } from "@/generated/prisma";
-import React from "react";
+import React, { startTransition, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,11 +10,26 @@ import {
   TableRow,
 } from "../ui/table";
 import { TransactionWithTags } from "@/types/types";
-import useTransactions from "@/hooks/transactions";
+import { useSession } from "next-auth/react";
+import { getTransactions } from "@/actions/transactions";
 
 export function TransactionsTable({ amount }: { amount: number | undefined }) {
-  const { transactions } = useTransactions();
-  console.log("trans", transactions);
+  const { data: session, status } = useSession();
+  const [transactions, setTransactions] = useState([] as TransactionWithTags[]);
+
+  useEffect(
+    () =>
+      startTransition(async () => {
+        if (status !== "authenticated") return;
+        const { success, data } = await getTransactions(
+          session.user.id,
+          undefined
+        );
+        console.log(data);
+        if (success && data) setTransactions(data);
+      }),
+    [session, status]
+  );
 
   return (
     <Table>
