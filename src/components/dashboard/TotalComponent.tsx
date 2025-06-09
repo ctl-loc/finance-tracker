@@ -15,7 +15,8 @@ export default function TotalComponent() {
       startTransition(async () => {
         if (status !== "authenticated") return;
         const fetchedWallets = await getWallets(session.user.id);
-        if (fetchedWallets.success) setWallets(fetchedWallets.data);
+        if (fetchedWallets.success && fetchedWallets.data)
+          setWallets(fetchedWallets.data);
       }),
     [session, status]
   );
