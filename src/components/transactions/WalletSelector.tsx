@@ -18,18 +18,30 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import useWallet from "@/hooks/wallet";
-import { useState } from "react";
+import { startTransition, useEffect, useState } from "react";
+import { BankAccount } from "@/generated/prisma";
+import { useSession } from "next-auth/react";
+import { getWallets } from "@/actions/wallets";
 
 export default function WalletSelector({
   walletState,
 }: {
   walletState: [string, React.Dispatch<React.SetStateAction<string>>];
 }) {
-  const { wallets } = useWallet();
+  const { data: session, status } = useSession();
+  const [wallets, setWallets] = useState([] as BankAccount[]);
   const [open, setOpen] = useState(false);
   const [value, setValue] = walletState;
 
+  useEffect(
+    () =>
+      startTransition(async () => {
+        if (status !== "authenticated") return;
+        const fetchedWallets = await getWallets(session.user.id);
+        if (fetchedWallets.success) setWallets(fetchedWallets.data);
+      }),
+    [session, status]
+  );
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
