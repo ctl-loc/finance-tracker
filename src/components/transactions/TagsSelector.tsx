@@ -54,7 +54,7 @@ export default function TagsSelector({
         const fetchedTags = await getTags(session.user.id);
         if (fetchedTags.success && fetchedTags.data) setTags(fetchedTags.data);
       }),
-    []
+    [status, session?.user.id]
   );
 
   return (
