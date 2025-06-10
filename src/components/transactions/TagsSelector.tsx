@@ -9,40 +9,53 @@ import {
   CommandItem,
 } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { useState } from "react";
-import useTags from "@/hooks/tags";
+import { startTransition, useEffect, useState } from "react";
 import { Tag } from "@/generated/prisma";
+import { useSession } from "next-auth/react";
+import { addTag, getTags } from "@/actions/tags";
 
 export default function TagsSelector({
   tagsState,
 }: {
   tagsState: [Tag[], React.Dispatch<React.SetStateAction<Tag[]>>];
 }) {
-  const { tags, addTag: addGlobalTag } = useTags();
+  const { data: session, status } = useSession();
+  const [tags, setTags] = useState([] as Tag[]);
 
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
   const [selectedTags, setSelectedTags] = tagsState;
 
-  const removeTag = (tag: Tag) => {
+  const unselectTag = (tag: Tag) => {
     setSelectedTags(
       selectedTags.filter((selected: Tag) => selected.id !== tag.id)
     );
   };
 
-  const addTag = (tag: Tag) => {
+  const selectTag = (tag: Tag) => {
     if (selectedTags.some((t) => t.id === tag.id)) {
-      removeTag(tag);
+      unselectTag(tag);
     } else {
       setSelectedTags((prev) => [...prev, tag]);
     }
   };
   const createTag = async (name: string) => {
     if (name === "") return;
-    const newTag: Tag = await addGlobalTag(name);
-    addTag(newTag);
+    const creationTag = { name: name, userId: session?.user.id } as Tag;
+    const newTag = await addTag(creationTag);
+    if (newTag.success && newTag.data) selectTag(newTag.data);
   };
+
+  useEffect(
+    () =>
+      startTransition(async () => {
+        if (status !== "authenticated") return;
+        const fetchedTags = await getTags(session.user.id);
+        if (fetchedTags.success && fetchedTags.data) setTags(fetchedTags.data);
+      }),
+    []
+  );
 
   return (
     <div>
@@ -51,7 +64,7 @@ export default function TagsSelector({
         {selectedTags.map((tag: Tag) => (
           <Badge key={tag.id} variant="secondary">
             {tag.name}
-            <div key={`remove-${tag.id}`} onClick={() => removeTag(tag)}>
+            <div key={`remove-${tag.id}`} onClick={() => unselectTag(tag)}>
               <X className="ml-1 h-3 w-3 cursor-pointer" />
             </div>
           </Badge>
