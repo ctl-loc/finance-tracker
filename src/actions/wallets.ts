@@ -1,9 +1,9 @@
 "use server";
 
 import { BankAccount } from "@/generated/prisma";
-import prisma from "@/lib/prisma";
 import { addTransaction } from "./transactions";
 import { ActionReturn } from "@/types/types";
+import extendedPrisma from "@/lib/prisma";
 
 /**
  * Adds a new wallet (bank account) to the database for a specified user.
@@ -18,7 +18,7 @@ export async function addWallet(
 ): ActionReturn<BankAccount> {
   try {
     // initiate wallet at 0
-    const newWallet = await prisma.bankAccount.create({
+    const newWallet = await extendedPrisma.bankAccount.create({
       data: {
         userId: wallet.userId,
         name: wallet.name,
@@ -55,7 +55,7 @@ export async function addWallet(
  */
 export async function getWallets(userId: string): ActionReturn<BankAccount[]> {
   try {
-    const wallets = await prisma.bankAccount.findMany({
+    const wallets = await extendedPrisma.bankAccount.findMany({
       where: { userId: userId },
     });
 
@@ -90,7 +90,7 @@ export async function getHistoryWallet(
   validTo: Date;
 } | null> {
   try {
-    const history = await prisma.bankAccountHistory.findFirst({
+    const history = await extendedPrisma.bankAccountHistory.findFirst({
       where: {
         userId: userId,
         bankAccountId: walletId,

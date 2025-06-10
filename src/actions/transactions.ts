@@ -1,7 +1,7 @@
 "use server";
 
 import { Tag } from "@/generated/prisma";
-import prisma from "@/lib/prisma";
+import extendedPrisma from "@/lib/prisma";
 import { ActionReturn, TransactionWithTags } from "@/types/types";
 
 /**
@@ -26,11 +26,12 @@ export async function getTransactions(
   if (walletId) where.id = walletId;
   if (timeLimit) where.createdAt = { gte: timeLimit };
   try {
-    const trans: TransactionWithTags[] = await prisma.transaction.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      include: { tags: true },
-    });
+    const trans: TransactionWithTags[] =
+      await extendedPrisma.transaction.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        include: { tags: true },
+      });
 
     return { success: true, data: trans };
   } catch (error) {
@@ -63,7 +64,7 @@ export async function addTransaction(transaction: {
   tags: Array<Tag>;
 }): ActionReturn<TransactionWithTags> {
   try {
-    const addedTrans = await prisma.transaction.create({
+    const addedTrans = await extendedPrisma.transaction.create({
       data: {
         userId: transaction.userId,
         bankAccountId: transaction.bankAccountId,
@@ -78,7 +79,7 @@ export async function addTransaction(transaction: {
     });
 
     // update the bank account balance
-    await prisma.bankAccount.update({
+    await extendedPrisma.bankAccount.update({
       where: { id: transaction.bankAccountId },
       data: { balance: { increment: transaction.amount } },
     });
