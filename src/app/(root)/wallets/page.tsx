@@ -1,18 +1,27 @@
 "use client";
+import { getWallets } from "@/actions/wallets";
 import { Separator } from "@/components/ui/separator";
 import NewWalletButtonComponent from "@/components/wallet/NewWalletButtonComponent";
 import WalletCardComponent from "@/components/wallet/WalletCardComponent";
 import { BankAccount } from "@/generated/prisma";
-import useWallet from "@/hooks/wallet";
 import ProtectedRoute from "@/wrappers/ProtectedRoute";
-import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { startTransition, useEffect, useState } from "react";
 
 export default function WalletPage() {
-  const { wallets, loading, fetchWallets } = useWallet();
+  const { data: session, status } = useSession();
+  const [wallets, setWallets] = useState([] as BankAccount[]);
 
-  useEffect(() => {
-    fetchWallets();
-  }, [fetchWallets]);
+  useEffect(
+    () =>
+      startTransition(async () => {
+        if (status !== "authenticated") return;
+        const fetchedWallets = await getWallets(session.user.id);
+        if (fetchedWallets.success && fetchedWallets.data)
+          setWallets(fetchedWallets.data);
+      }),
+    [session, status]
+  );
 
   return (
     <ProtectedRoute>
@@ -25,7 +34,7 @@ export default function WalletPage() {
           <Separator />
           {/* all wallets */}
           <div className="flex flex-wrap gap-4 p-4">
-            {!loading &&
+            {status === "authenticated" &&
               wallets.map((wallet: BankAccount) => (
                 <div className="flex" key={wallet.id}>
                   <WalletCardComponent wallet={wallet} />

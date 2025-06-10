@@ -18,10 +18,11 @@ import {
 import { Label } from "../ui/label";
 import TagsSelector from "./TagsSelector";
 import { Tag } from "@/generated/prisma";
-import useTransactions from "@/hooks/transactions";
+import { addTransaction } from "@/actions/transactions";
+import { useSession } from "next-auth/react";
 
 export default function NewTransactionButtonComponent() {
-  const { addTransaction } = useTransactions();
+  const { data: session } = useSession();
 
   const walletState = useState("");
   const tagsState = useState([] as Tag[]);
@@ -29,6 +30,7 @@ export default function NewTransactionButtonComponent() {
   const description = useRef<HTMLInputElement>(null);
 
   const onSubmitForm = async () => {
+    if (!session || !session.user) return;
     if (!walletState[0]) {
       console.warn("[WARN] no wallet name");
       return;
@@ -40,11 +42,13 @@ export default function NewTransactionButtonComponent() {
     }
 
     await addTransaction({
-      accountId: walletState[0],
-      value: +value.current.value,
-      tags: tagsState[0],
+      userId: session.user.id,
+      bankAccountId: walletState[0],
+      amount: +value.current.value,
       description: description.current?.value,
+      tags: tagsState[0],
     });
+
     window.location.reload();
   };
 
