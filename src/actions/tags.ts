@@ -1,3 +1,4 @@
+"use server";
 import { Tag } from "@/generated/prisma";
 import extendedPrisma from "@/lib/prisma";
 import { ActionReturn } from "@/types/types";
