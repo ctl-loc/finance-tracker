@@ -1,5 +1,5 @@
 "use client";
-import SignInForm from "@/components/login/SigninForm";
+import SignInComponent from "@/components/login/SignInComponent";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -18,7 +18,7 @@ export default function SignInPage() {
 
   return (
     <div className="bg-gray-800 h-screen flex items-center justify-center">
-      <SignInForm />
+      <SignInComponent />
     </div>
   );
 }

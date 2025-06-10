@@ -22,7 +22,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
@@ -52,7 +51,7 @@ export default function SignInForm() {
   };
 
   return (
-    <Card className="bg-gray-700 min-h-1/3 w-1/3 flex justify-around text-gray-200">
+    <Card>
       {/* header */}
       <CardHeader>
         <CardTitle>Sign In !</CardTitle>
@@ -96,13 +95,9 @@ export default function SignInForm() {
       <Separator />
       {/* footer */}
       <CardFooter className="flex justify-between">
-        <Link href="/auth/signup" className="underline text-blue-300">
-          No account yet? Sign up now
-        </Link>
-
         {/* i am having fun */}
         <p
-          className="underline text-blue-300 cursor-pointer"
+          className="underline text-blue-900 cursor-pointer"
           onClick={() => console.log("fuck you")}
         >
           Forgot password ?

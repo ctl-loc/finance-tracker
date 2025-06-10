@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -20,7 +19,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,7 +59,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <Card className="bg-gray-700 min-h-1/3 w-1/3 flex justify-around text-gray-200">
+    <Card>
       {/* header */}
       <CardHeader>
         <CardTitle>Sign Up !</CardTitle>
@@ -102,13 +100,6 @@ export default function SignUpForm() {
           </form>
         </Form>
       </CardContent>
-      <Separator />
-      {/* footer */}
-      <CardFooter className="flex justify-between">
-        <Link href="/auth/signin" className="underline text-blue-300">
-          Already signed up? Sign in now
-        </Link>
-      </CardFooter>
     </Card>
   );
 }
