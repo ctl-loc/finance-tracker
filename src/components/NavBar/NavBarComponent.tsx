@@ -1,54 +1,65 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-const buttonsValue = [
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { Banknote, Home, Trophy, Wallet } from "lucide-react";
+
+const menuItems = [
   {
-    name: "Dashboard",
-    action: (router: AppRouterInstance) => {
-      router.push("/dashboard");
-    },
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: Home,
   },
   {
-    name: "Transactions",
-    action: (router: AppRouterInstance) => {
-      router.push("/transactions");
-    },
+    title: "Transactions",
+    url: "/transactions",
+    icon: Banknote,
   },
   {
-    name: "Wallets",
-    action: (router: AppRouterInstance) => {
-      router.push("/wallets");
-    },
+    title: "Wallets",
+    url: "/wallets",
+    icon: Wallet,
   },
   {
-    name: "Goals",
-    action: (router: AppRouterInstance) => {
-      router.push("/goals");
-    },
+    title: "Goals",
+    url: "/goals",
+    icon: Trophy,
   },
 ];
 
 export default function NavBarComponent() {
-  const router = useRouter();
-
   return (
-    <div className="flex flex-col gap-2 bg-purple-600 h-full w-full p-4">
-      <div>Logo</div>
-      <div className="flex flex-col gap-2">
-        {/* each button */}
-        {buttonsValue.map(({ name, action }) => (
-          <Button
-            variant="outline"
-            className="bg-purple-800 text-white"
-            onClick={() => action(router)}
-            key={name}
-          >
-            {name}
-          </Button>
-        ))}
-      </div>
-    </div>
+    <Sidebar>
+      <SidebarHeader /> {/* empty for now //TODO*/}
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 }
