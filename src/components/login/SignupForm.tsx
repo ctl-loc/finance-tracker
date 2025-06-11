@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent } from "react";
-import { register } from "@/lib/auth";
+import { FormEvent, useState } from "react";
+import { register } from "@/actions/auth";
 import {
   Card,
   CardContent,
@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { Check, Clock, TriangleAlert } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -30,7 +30,9 @@ const formSchema = z.object({
 });
 
 export default function SignUpForm() {
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [validation, setValidation] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,19 +44,25 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     if (!email || !password) {
-      throw new Error("Email and password are required");
+      setError("Username and password are mandatory");
+      return;
     }
 
     try {
       await register(email, password);
-      router.push("/auth/signin");
+      setValidation(true);
+      setError("");
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,8 +74,24 @@ export default function SignUpForm() {
         <CardDescription>Who are you ? Welcome my stranger</CardDescription>
       </CardHeader>
       <Separator />
-      {/* content */}
       <CardContent className="flex flex-col">
+        {/* information popup */}
+        {error && (
+          <div className="bg-red-600 text-white p-2 m-2 rounded-xl flex items-center text-xl pl-5 gap-2">
+            <TriangleAlert /> {error}
+          </div>
+        )}
+        {loading && (
+          <div className="bg-yellow-500 text-white p-2 m-2 rounded-xl flex items-center text-xl pl-5 gap-2">
+            <Clock /> Loading...
+          </div>
+        )}
+        {validation && (
+          <div className="bg-green-700 text-white p-2 m-2 rounded-xl flex items-center text-xl pl-5 gap-2">
+            <Check /> Successfully registred, you can now sign in
+          </div>
+        )}
+        {/* form */}
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* email field */}
