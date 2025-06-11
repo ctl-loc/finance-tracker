@@ -25,7 +25,6 @@ export function TransactionsTable({ amount }: { amount: number | undefined }) {
           session.user.id,
           undefined
         );
-        console.log(data);
         if (success && data) setTransactions(data);
       }),
     [session, status]
