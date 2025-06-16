@@ -3,13 +3,24 @@ import DashboardCardComponent from "./CardComponent";
 import { BankAccount } from "@/generated/prisma";
 import { useSession } from "next-auth/react";
 import { getHistoryWallet, getWallets } from "@/actions/wallets";
+import { getPeriodFormatted } from "@/lib/dates";
 
-export default function TotalComponent() {
+export default function TotalComponent({
+  dates,
+}: {
+  dates: {
+    selected: Date;
+    symetrical: Date;
+  };
+}) {
   const { data: session, status } = useSession();
   const [wallets, setWallets] = useState([] as BankAccount[]);
   const [currentTotal, setCurrentTotal] = useState(0);
   const [oldTotal, setOldTotal] = useState(0);
 
+  const { selected: selectedDate, symetrical: symetricalDate } = dates;
+
+  // fetch wallet on render
   useEffect(
     () =>
       startTransition(async () => {
@@ -32,15 +43,13 @@ export default function TotalComponent() {
         setCurrentTotal(currTotal);
 
         // Old total calculation
-        const oneMonthAgo = new Date(
-          new Date().setMonth(new Date().getMonth() - 1)
-        );
+
         const oldBalances = await Promise.all(
           wallets.map(async (curr) => {
             const history = await getHistoryWallet(
               session.user.id,
               curr.id,
-              oneMonthAgo
+              selectedDate
             );
             return history.data?.balance ?? curr.balance;
           })
@@ -56,7 +65,7 @@ export default function TotalComponent() {
       title={"Total Balance"}
       amount={currentTotal}
       growth={((currentTotal - oldTotal) * 100) / oldTotal} // calculate percentage
-      periodGrowth={"last month"}
+      periodGrowth={getPeriodFormatted(selectedDate)}
     />
   );
 }
