@@ -18,13 +18,19 @@ import { ActionReturn, TransactionWithTags } from "@/types/types";
 export async function getTransactions(
   userId: string,
   walletId: string | undefined,
-  timeLimit?: Date // Use Date for time limit
+  timeLimit?: { from: Date; to?: Date }
 ): ActionReturn<TransactionWithTags[]> {
   // create where field for request
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const where: any = { userId };
   if (walletId) where.id = walletId;
-  if (timeLimit) where.createdAt = { gte: timeLimit };
+  if (timeLimit) {
+    where.createdAt = {
+      gte: timeLimit.from,
+      ...(timeLimit.to && { lte: timeLimit.to }),
+    };
+  }
+
   try {
     const trans: TransactionWithTags[] =
       await extendedPrisma.transaction.findMany({
