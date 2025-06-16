@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { getTransactions } from "@/actions/transactions";
 import { getPeriodFormatted } from "@/lib/dates";
 
-export default function IncomeComponent({
+export default function ExpensesComponent({
   dates,
 }: {
   dates: { selected: Date; symetrical: Date };
@@ -39,25 +39,25 @@ export default function IncomeComponent({
         );
 
         // for each transaction period, compute value (with destructor logic)
-        const [currPeriodGain, lastPeriodGain] = [
+        const [currPeriodLoss, lastPeriodLoss] = [
           currTransactions,
           lastTransactions,
         ].map((period) =>
           period.reduce(
-            (acc, curr) => (curr.amount > 0 ? curr.amount + acc : acc),
+            (acc, curr) => (curr.amount < 0 ? curr.amount + acc : acc),
             0
           )
         );
 
-        setCurrentPeriod(currPeriodGain);
-        setLastPeriod(lastPeriodGain);
+        setCurrentPeriod(currPeriodLoss);
+        setLastPeriod(lastPeriodLoss);
       }),
     [status, session, dates]
   );
 
   return (
     <DashboardCardComponent
-      title={"Incomes"}
+      title={"Expenses"}
       amount={currentPeriod}
       growth={((currentPeriod - lastPeriod) * 100) / lastPeriod} // calculate percentage
       periodGrowth={getPeriodFormatted(selectedDate)}
