@@ -13,17 +13,17 @@ import { ActionReturn } from "@/types/types";
  *   - If an error occurs, returns `{ success: false }`.
  */
 export async function getTags(userId: string): ActionReturn<Tag[]> {
-  try {
-    const tags = await extendedPrisma.tag.findMany({
-      where: {
-        userId: userId,
-      },
-    });
-    return { success: true, data: tags };
-  } catch (error) {
-    console.error("[ERROR] fetching tags : ", error);
-    return { success: false };
-  }
+    try {
+        const tags = await extendedPrisma.tag.findMany({
+            where: {
+                userId: userId,
+            },
+        });
+        return { success: true, data: tags };
+    } catch (error) {
+        console.error("[ERROR] fetching tags : ", error);
+        return { success: false };
+    }
 }
 
 /**
@@ -36,11 +36,11 @@ export async function getTags(userId: string): ActionReturn<Tag[]> {
  *   - If an error occurs, returns `{ success: false }`.
  */
 export async function addTag(tag: Tag): ActionReturn<Tag> {
-  try {
-    const addedTag = await extendedPrisma.tag.create({ data: { ...tag } });
-    return { success: true, data: addedTag };
-  } catch (error) {
-    console.error(`[ERROR] adding tag ${tag} : `, error);
-    return { success: false };
-  }
+    try {
+        const addedTag = await extendedPrisma.tag.create({ data: { ...tag } });
+        return { success: true, data: addedTag };
+    } catch (error) {
+        console.error(`[ERROR] adding tag ${tag} : `, error);
+        return { success: false };
+    }
 }
