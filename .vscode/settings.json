@@ -1,3 +1,5 @@
 {
-  "conventionalCommits.scopes": ["docker", "prisma", "packages"]
+  "conventionalCommits.scopes": ["docker", "prisma", "packages"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }
